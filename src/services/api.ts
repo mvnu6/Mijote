@@ -18,6 +18,15 @@ export class ApiError extends Error {
   }
 }
 
+export async function getRecipeById(id: number, signal?: AbortSignal): Promise<Recipe> {
+  const response = await fetch(`${BASE_URL}/recipes/${id}`, { signal });
+  if (!response.ok) {
+    throw new ApiError("Recette introuvable", response.status);
+  }
+  return response.json();
+}
+
+
 //recherche de recette avec limit=0
 export async function searchRecipes(
   query: string = "",

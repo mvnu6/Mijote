@@ -1,4 +1,4 @@
-import { Recipe } from ".";
+
 import { BASE_URL, ApiError } from "../services/api";
 
 //tri par type de rapas
