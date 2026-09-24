@@ -1,3 +1,6 @@
+import { Recipe } from ".";
+import { BASE_URL, ApiError } from "../services/api";
+
 //tri par type de rapas
 export type Meal =
   | "breakfast"
@@ -75,4 +78,14 @@ export interface ShoppingListEntry {
   recipeId: number;
   recipeName: string;
   items: ShoppingListItem[];
+}export async function getRecipeById(
+    id: number | string,
+    signal?: AbortSignal
+): Promise<Recipe> {
+    const response = await fetch(`${BASE_URL}/recipes/${id}`, { signal });
+    if (!response.ok) {
+        throw new ApiError("Recette introuvable", response.status);
+    }
+    return response.json();
 }
+
