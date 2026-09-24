@@ -20,24 +20,34 @@ export function CatalogPage() {
     [debouncedQuery]
   );
 
-  const filteredAndSortedRecipes = useMemo(() => {
-    if (!data?.recipes) return [];
-    let result = [...data.recipes];
+const filteredAndSortedRecipes = useMemo(() => {
+  if (!data?.recipes) return [];
+  
+  let result = [...data.recipes];
 
-    if (mealType) {
-      result = result.filter((r) => r.Meal.some((mt) => mt.toLowerCase() === mealType.toLowerCase()));
-    }
+  // Filtre par type de repas sécurisé
+  if (mealType) {
+    result = result.filter((recipe) =>
+      Array.isArray(recipe.Meal) &&
+      recipe.Meal.some(
+        (mt) => mt && mt.toLowerCase() === mealType.toLowerCase()
+      )
+    );
+  }
 
-    if (sortBy === 'rating') {
-      result.sort((a, b) => b.rating - a.rating);
-    } else if (sortBy === 'time') {
-      result.sort((a, b) => (a.prepTimeMinutes + a.cookTimeMinutes) - (b.prepTimeMinutes + b.cookTimeMinutes));
-    } else if (sortBy === 'name') {
-      result.sort((a, b) => a.name.localeCompare(b.name));
-    }
 
-    return result;
-  }, [data, mealType, sortBy]);
+  if (sortBy === 'rating') {
+    result.sort((a, b) => b.rating - a.rating);
+  } else if (sortBy === 'time') {
+    result.sort(
+      (a, b) => (a.prepTimeMinutes + a.cookTimeMinutes) - (b.prepTimeMinutes + b.cookTimeMinutes)
+    );
+  } else if (sortBy === 'name') {
+    result.sort((a, b) => a.name.localeCompare(b.name));
+  }
+
+  return result;
+}, [data, mealType, sortBy]);
 
   return (
     <div className="catalog-page">
@@ -53,12 +63,12 @@ export function CatalogPage() {
         <div className="filters-row">
           <select value={mealType} onChange={(e) => setMealType(e.target.value as Meal | '')}>
             <option value="">Tous les repas</option>
-            <option value="breakfast">Petit-déjeuner</option>
-            <option value="lunch">Déjeuner</option>
-            <option value="dinner">Dîner</option>
-            <option value="appetizer">Entrée</option>
+            <option value="Petit-déjeuner">Breakfast</option>
+            <option value="Déjeuner">Lunch</option>
+            <option value="Dîner">Dinner</option>
+            <option value="Entrée">Appetizer</option>
             <option value="dessert">Dessert</option>
-            <option value="beverage">Boisson</option>
+            <option value="Boisson">Beverage</option>
           </select>
 
           <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>

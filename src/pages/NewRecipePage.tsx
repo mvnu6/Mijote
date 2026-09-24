@@ -3,6 +3,16 @@ import { validateNewRecipe, NewRecipeFormValues } from '../utils/validation';
 import { createRecipe } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 
+
+
+function validate(values: NewRecipeFormValues) {
+  const errors: Partial<Record<keyof NewRecipeFormValues, string>> = {};
+  if (!values.name.trim()) errors.name = 'Le nom est obligatoire';
+
+  return errors;
+}
+
+
 export function NewRecipePage() {
   const { user } = useAuth();
   const [values, setValues] = useState<NewRecipeFormValues>({

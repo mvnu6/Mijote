@@ -65,7 +65,6 @@ export function LoginPage() {
           {loading ? 'Connexion...' : 'Se connecter'}
         </button>
       </form>
-      <p className="test-credentials">Compte de test : emilys / emilyspass</p>
     </div>
   );
 }
