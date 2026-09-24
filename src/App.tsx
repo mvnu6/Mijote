@@ -1,55 +1,38 @@
-import { useState, useEffect } from "react";
-import { searchRecipes, getRecipeById } from "./services/api";
-import { Recipe } from "./types";
+import { Routes, Route } from 'react-router';
+import { AuthProvider } from './context/AuthContext';
+import { ShoppingListProvider } from './context/ShoppingListContext';
+import { Layout } from './components/Layout';
+import { ProtectedRoute } from './components/ProtectedRoute';
 
+import { CatalogPage } from './pages/CatalogPage';
+import { RecipePage } from './pages/RecipePage';
+import { ShoppingListPage } from './pages/ShoppingListPage';
+import { LoginPage } from './pages/LoginPage';
+import { NewRecipePage } from './pages/NewRecipePage';
+import { NotFoundPage } from './pages/NotFoundPage';
 
-
-function App() {
-  const [recipes, setRecipes] = useState <Recipe[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-useEffect(() => {
-  getRecipeById(1)
-    .then((recipe) => {
-      console.log('Recette #1 récupérée :', recipe);
-    })
-    .catch((err) => {
-      console.error('Erreur getRecipeById :', err);
-    });
-}, []);
-
-if (loading) return <p>Chargement et test de l'API en cours...</p>;
-if (error) return <p>Erreur : {error}</p>;
-
+export default function App() {
   return (
-    <>
-      <div>
-        
-        <h1>Test de l'API DummyJSON (MIJOTÉ)</h1>
-        <p>
-          Nombre de recettes récupérées : <strong>{recipes.length}</strong>
-        </p>
-        <h3>Aperçu des 5 premières recettes :</h3>
-        <ul>
-          
-          {recipes.slice(0, 5).map((Recipe) => (
-            <li>
-              
-              <strong>{Recipe.name}</strong> ({Recipe.cuisine} 
-              {Recipe.difficulty})
-            </li>
-          ))}
-        </ul>
-        <p>
-          <em>
-            Regarde la console de ton navigateur (F12) pour voir les objets
-            complets !
-          </em>
-        </p>
-      </div>
-    </>
+    <AuthProvider>
+      <ShoppingListProvider>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<CatalogPage />} />
+            <Route path="recettes/:id" element={<RecipePage />} />
+            <Route path="courses" element={<ShoppingListPage />} />
+            <Route path="connexion" element={<LoginPage />} />
+            <Route
+              path="proposer"
+              element={
+                <ProtectedRoute>
+                  <NewRecipePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="*" element={<NotFoundPage />} />
+          </Route>
+        </Routes>
+      </ShoppingListProvider>
+    </AuthProvider>
   );
 }
-
-export default App;
