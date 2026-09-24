@@ -2,7 +2,7 @@ import { Link } from 'react-router';
 import { useShoppingListState, useShoppingListActions } from '../context/ShoppingListContext';
 
 export function ShoppingListPage() {
-  const entries = useShoppingListState();
+  const entries = useShoppingListState(); 
   const { toggleItem, removeRecipe, clearList } = useShoppingListActions();
 
   const totalRecipes = entries.length;

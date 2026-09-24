@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { useFetch } from '../hooks/useFetch';
 import { useDebounce } from '../hooks/useDebounce';
 import { searchRecipes } from '../services/api';
-import { RecipeSearchResponse, MealType } from '../types';
+import { RecipeSearchResponse, Meal } from '../types';
 import { RecipeCard } from '../components/RecipeCard';
 import { Loader } from '../components/Loader';
 import { ErrorMessage } from '../components/ErrorMessage';
@@ -10,7 +10,7 @@ import { EmptyState } from '../components/EmptyState';
 
 export function CatalogPage() {
   const [query, setQuery] = useState('');
-  const [mealType, setMealType] = useState<MealType | ''>('');
+  const [mealType, setMealType] = useState<Meal | ''>('');
   const [sortBy, setSortBy] = useState<string>('default');
 
   const debouncedQuery = useDebounce(query, 400);
@@ -25,7 +25,7 @@ export function CatalogPage() {
     let result = [...data.recipes];
 
     if (mealType) {
-      result = result.filter((r) => r.mealType.some((mt) => mt.toLowerCase() === mealType.toLowerCase()));
+      result = result.filter((r) => r.Meal.some((mt) => mt.toLowerCase() === mealType.toLowerCase()));
     }
 
     if (sortBy === 'rating') {
@@ -51,7 +51,7 @@ export function CatalogPage() {
         />
 
         <div className="filters-row">
-          <select value={mealType} onChange={(e) => setMealType(e.target.value as MealType | '')}>
+          <select value={mealType} onChange={(e) => setMealType(e.target.value as Meal | '')}>
             <option value="">Tous les repas</option>
             <option value="breakfast">Petit-déjeuner</option>
             <option value="lunch">Déjeuner</option>
